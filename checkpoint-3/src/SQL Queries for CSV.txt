@@ -1,0 +1,100 @@
+disciplined_race:
+
+SELECT race,COUNT(disciplined),area_id FROM
+(SELECT race,allegation_id,disciplined  FROM
+(SELECT doa.allegation_id as all_id,disciplined FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id
+WHERE NOT disciplined
+GROUP BY race,area_id
+
+undisciplined_race:
+
+SELECT race,COUNT(disciplined),area_id FROM
+(SELECT race,allegation_id,disciplined  FROM
+(SELECT doa.allegation_id as all_id,disciplined FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id
+WHERE disciplined=TRUE
+GROUP BY race,area_id
+
+undisciplined_race_categories:
+
+SELECT race,COUNT(disciplined),area_id,category FROM
+(SELECT race,disciplined,area_id,allegation_category_id FROM
+(SELECT race,allegation_id,disciplined,allegation_category_id  FROM
+(SELECT doa.allegation_id as all_id,disciplined,allegation_category_id FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id) as foo3
+JOIN data_allegationcategory dac ON dac.id=foo3.allegation_category_id
+WHERE NOT disciplined
+GROUP BY race,area_id,category
+
+disciplined_race_categories:
+
+SELECT race,COUNT(disciplined),area_id,category FROM
+(SELECT race,disciplined,area_id,allegation_category_id FROM
+(SELECT race,allegation_id,disciplined,allegation_category_id  FROM
+(SELECT doa.allegation_id as all_id,disciplined,allegation_category_id FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id) as foo3
+JOIN data_allegationcategory dac ON dac.id=foo3.allegation_category_id
+WHERE disciplined
+GROUP BY race,area_id,category
+
+all_allegations:
+
+SELECT COUNT(disciplined),area_id FROM
+(SELECT race,disciplined,area_id,allegation_category_id FROM
+(SELECT race,allegation_id,disciplined,allegation_category_id  FROM
+(SELECT doa.allegation_id as all_id,disciplined,allegation_category_id FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id) as foo3
+JOIN data_allegationcategory dac ON dac.id=foo3.allegation_category_id
+WHERE NOT disciplined
+GROUP BY area_id
+
+all_allegations_disciplined: 
+
+SELECT COUNT(disciplined),area_id FROM
+(SELECT race,disciplined,area_id,allegation_category_id FROM
+(SELECT race,allegation_id,disciplined,allegation_category_id  FROM
+(SELECT doa.allegation_id as all_id,disciplined,allegation_category_id FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id) as foo3
+JOIN data_allegationcategory dac ON dac.id=foo3.allegation_category_id
+WHERE disciplined
+GROUP BY area_id
+
+allegation_categories_no_race:
+
+SELECT COUNT(disciplined),area_id,category FROM
+(SELECT race,disciplined,area_id,allegation_category_id FROM
+(SELECT race,allegation_id,disciplined,allegation_category_id  FROM
+(SELECT doa.allegation_id as all_id,disciplined,allegation_category_id FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id) as foo3
+JOIN data_allegationcategory dac ON dac.id=foo3.allegation_category_id
+WHERE NOT disciplined
+GROUP BY area_id,category
+
+disciplined_categories_no_race:
+
+SELECT COUNT(disciplined),area_id,category FROM
+(SELECT race,disciplined,area_id,allegation_category_id FROM
+(SELECT race,allegation_id,disciplined,allegation_category_id  FROM
+(SELECT doa.allegation_id as all_id,disciplined,allegation_category_id FROM data_allegation da
+    JOIN data_officerallegation doa ON da.crid=doa.allegation_id WHERE NOT is_officer_complaint) as foo
+JOIN data_complainant dc ON dc.allegation_id=foo.all_id) as foo2
+JOIN data_allegation_areas daa ON daa.allegation_id=foo2.allegation_id) as foo3
+JOIN data_allegationcategory dac ON dac.id=foo3.allegation_category_id
+WHERE disciplined
+GROUP BY area_id,category
+
