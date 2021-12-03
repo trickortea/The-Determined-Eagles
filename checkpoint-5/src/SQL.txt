@@ -1,0 +1,34 @@
+DROP TABLE IF EXISTS x1;
+CREATE TEMP TABLE x1 AS
+(SELECT allegation_id,race,gender,cr_text,id FROM data_allegation da
+    LEFT JOIN data_complainant dc
+        ON da.crid=dc.allegation_id
+WHERE NOT is_officer_complaint AND da.cr_text IS NOT NULL)
+
+DELETE FROM x1
+WHERE EXISTS (SELECT 1 FROM x1 b WHERE x1.allegation_id=b.allegation_id AND x1.id>b.id)
+
+
+DROP TABLE IF EXISTS x2;
+CREATE TEMP TABLE x2 AS
+(SELECT doa.officer_id, doa.allegation_id,x1.race,x1.gender,x1.cr_text,doa.id,doa.disciplined FROM x1
+   JOIN data_officerallegation doa ON doa.allegation_id=x1.allegation_id)
+
+DELETE FROM x2
+WHERE EXISTS (SELECT 1 FROM x2 b WHERE x2.allegation_id=b.allegation_id AND x2.id>b.id)
+
+DROP TABLE IF EXISTS x3;
+CREATE TEMP TABLE x3 AS
+(SELECT x2.officer_id, x2.allegation_id,x2.race,x2.gender,x2.cr_text,x2.id,x2.disciplined,allegation_count FROM x2
+   JOIN data_officer doff ON doff.id=x2.officer_id)
+
+DELETE FROM x3
+WHERE EXISTS (SELECT 1 FROM x3 b WHERE x3.allegation_id=b.allegation_id AND x3.id>b.id)
+
+SELECT * FROM x1
+SELECT * FROM x2
+SELECT * FROM x3
+
+
+
+Table x3 is NLP_data.csv
